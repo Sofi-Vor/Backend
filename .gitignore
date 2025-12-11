@@ -1,0 +1,41 @@
+
+# Зависимости
+node_modules/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Keystone
+.keystone/
+.next/
+
+# Изображения/файлы (НЕ КОММИТИТЬ!)
+public/uploads/
+
+# Логи
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Системные
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Windows (предотвратить сканирование корня)
+# Эти пути относительные от корня проекта
+DumpStack.log.tmp
+hiberfil.sys
+pagefile.sys
+swapfile.sys
+
+# Временные файлы
+tmp/
+temp/

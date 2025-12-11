@@ -1,0 +1,18 @@
+{
+  "name": "my-keystone-blog",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "keystone dev",
+    "start": "keystone start",
+    "build": "keystone build",
+    "postinstall": "keystone postinstall"
+  },
+  "dependencies": {
+    "@keystone-6/core": "^6.0.0",
+    "@keystone-6/fields-document": "^7.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  }
+}
