@@ -17,7 +17,7 @@ export const User = list({
         name: text({ validation: { isRequired: true } }),
         email: text({ validation: { isRequired: true }, isIndexed: 'unique' }),
         password: password({ validation: { isRequired: true } }),
-
-        posts: relationship({ ref: 'Post.author', many: true })
+        posts: relationship({ ref: 'Post.author', many: true }),
+        role: relationship({ ref: 'Role.users' })
     },
 });

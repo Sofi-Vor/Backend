@@ -12,11 +12,45 @@ generator client {
 }
 
 model User {
-  id       String @id @default(cuid())
-  name     String @default("")
-  email    String @unique @default("")
+  id       String  @id @default(cuid())
+  name     String  @default("")
+  email    String  @unique @default("")
   password String
-  posts    Post[] @relation("Post_author")
+  posts    Post[]  @relation("Post_author")
+  role     Role?   @relation("User_role", fields: [roleId], references: [id])
+  roleId   String? @map("role")
+
+  @@index([roleId])
+}
+
+model Role {
+  id    String @id @default(cuid())
+  name  String @default("")
+  users User[] @relation("User_role")
+}
+
+model Post {
+  id              String    @id @default(cuid())
+  title           String    @default("")
+  slug            String    @unique @default("")
+  image_id        String?
+  image_filesize  Int?
+  image_width     Int?
+  image_height    Int?
+  image_extension String?
+  content         String    @default("")
+  excerpt         String    @default("")
+  status          String?   @default("draft")
+  createdAt       DateTime? @default(now())
+  updatedAt       DateTime? @updatedAt
+  author          User?     @relation("Post_author", fields: [authorId], references: [id])
+  authorId        String?   @map("author")
+  category        Category? @relation("Post_category", fields: [categoryId], references: [id])
+  categoryId      String?   @map("category")
+  tags            Tag[]     @relation("Post_tags")
+
+  @@index([authorId])
+  @@index([categoryId])
 }
 
 model Tag {
@@ -30,26 +64,4 @@ model Category {
   name  String @default("")
   slug  String @unique @default("")
   posts Post[] @relation("Post_category")
-}
-
-model Post {
-  id              String    @id @default(cuid())
-  title           String    @default("")
-  slug            String    @unique @default("")
-  image_id        String?
-  image_filesize  Int?
-  image_width     Int?
-  image_height    Int?
-  image_extension String?
-  content         String    @default("")
-  status          String?   @default("draft")
-  publishedAt     DateTime?
-  author          User?     @relation("Post_author", fields: [authorId], references: [id])
-  authorId        String?   @map("author")
-  category        Category? @relation("Post_category", fields: [categoryId], references: [id])
-  categoryId      String?   @map("category")
-  tags            Tag[]     @relation("Post_tags")
-
-  @@index([authorId])
-  @@index([categoryId])
 }

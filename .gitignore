@@ -12,7 +12,7 @@ node_modules/
 .next/
 
 # Изображения/файлы (НЕ КОММИТИТЬ!)
-public/uploads/
+public/images/
 
 # Логи
 npm-debug.log*
