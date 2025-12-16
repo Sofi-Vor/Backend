@@ -40,7 +40,7 @@ model Post {
   image_extension String?
   content         String    @default("")
   excerpt         String    @default("")
-  status          String?   @default("draft")
+  status          String    @default("draft")
   createdAt       DateTime? @default(now())
   updatedAt       DateTime? @updatedAt
   author          User?     @relation("Post_author", fields: [authorId], references: [id])

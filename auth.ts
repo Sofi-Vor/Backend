@@ -2,7 +2,7 @@ import { createAuth } from '@keystone-6/auth';
 import { statelessSessions } from '@keystone-6/core/session';
 
 let sessionSecret = '-- DEV COOKIE SECRET; CHANGE ME --';
-let sessionMaxAge = 60 * 60 * 24; // 24 hours
+let sessionMaxAge = 60 * 60 * 24 * 30; // 30 дней
 
 export const session = statelessSessions({
   secret: sessionSecret,
@@ -17,7 +17,11 @@ export const { withAuth } = createAuth({
   initFirstItem: {
     fields: ['name', 'email', 'password', 'role'],
     itemData: {
-      role: { connect: { name: 'admin' } },
+      role: {
+        create: {
+          name: 'admin',
+        },
+      },
     },
   },
 
@@ -25,6 +29,9 @@ export const { withAuth } = createAuth({
     id
     name
     email
-    role { name }
+    role {
+      id
+      name
+    }
   `,
 });

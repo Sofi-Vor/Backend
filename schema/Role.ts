@@ -1,6 +1,8 @@
 import { list } from '@keystone-6/core';
-import { text, relationship } from '@keystone-6/core/fields';
 import { allowAll } from '@keystone-6/core/access';
+import { text, relationship } from '@keystone-6/core/fields';
+
+const isAdmin = ({ session }: any) => Boolean(session?.data?.isAdmin);
 
 export const Role = list({
   access: allowAll,

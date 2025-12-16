@@ -1,20 +1,17 @@
 import { list } from '@keystone-6/core';
 import { text, relationship, select, timestamp, image } from '@keystone-6/core/fields';
 import { createSlug } from './Slug';
-import { allowAll } from '@keystone-6/core/access';
-import { timeStamp } from 'console';
 
 
 const isAdmin = ({ session }: any) => Boolean(session?.data?.isAdmin);
-const isSignedIn = ({ session }: any) => Boolean(session?.data);
 
 
 export const Post = list({
   access:{
     operation:{
-      create: allowAll,
-      update: allowAll,
-      delete: allowAll,
+      create: isAdmin,
+      update: isAdmin,
+      delete: isAdmin,
       query: ()=>true
     },
     filter: {
@@ -27,7 +24,7 @@ export const Post = list({
   fields: {
     title: text({ validation: { isRequired: true } }),
     slug: text({ isIndexed: 'unique' }),
-    image: image({storage: 'myLocalImages'}),
+    image: image({ storage: 'my_images' }),
     content: text({ ui: { displayMode: 'textarea' } }),
     excerpt: text({ validation: { isRequired: false } }),
     status: select({
@@ -35,7 +32,9 @@ export const Post = list({
         { label: 'Draft', value: 'draft' },
         { label: 'Published', value: 'published' }
       ],
-      defaultValue: 'draft'
+      defaultValue: 'draft',
+      validation: { isRequired: true },
+      ui: { displayMode: 'segmented-control' },
     }),
     createdAt: timestamp({
       defaultValue: { kind: 'now' },
@@ -52,6 +51,12 @@ export const Post = list({
     tags: relationship({ ref: 'Tag.posts', many: true })
   },
 
+  ui: {
+  listView: {
+    initialColumns: ['title', 'status'],
+  },
+  searchFields: ['title', 'excerpt'],
+  },
 
   hooks: {
     resolveInput: async ({ resolvedData, operation, item }) => {
@@ -61,4 +66,6 @@ export const Post = list({
       return resolvedData;
     }
   }
+
+
 });

@@ -6,12 +6,11 @@ import { Post } from './schema/Post';
 import { Role } from './schema/Role';
 import { withAuth, session } from './auth';
 
-
 export default withAuth(
   config({
     db: {
       provider: 'postgresql',
-      url: "postgres://postgres:root@localhost:5432/keystone_blog",
+      url: "postgres://postgres:root@localhost:5432/keystone_blog"
     },
 
     lists: {
@@ -25,28 +24,26 @@ export default withAuth(
     server:{
       port: 3001
     },
-    storage: {
-    myLocalImages: {
-      kind: 'local',
-      type: 'image',
-      storagePath: 'public/images',
-      generateUrl: (path: string) => `/images/${path}`,
-      serverRoute: {
-        path: '/images',
+     storage: {
+      my_images: {
+        kind: 'local',
+        type: 'image',
+        storagePath: 'public/images',
+        generateUrl: path => `/images/${path}`,
+        serverRoute: {
+          path: '/images'
+        },
+        preserve: false,
       },
-      preserve: false,
     },
-    },
-
     session,
 
     ui: {
       isAccessAllowed: (context) => {
-        const role = context?.session?.data?.role?.name;
-        return role === 'admin';
-      },
+    if (!context.session) return false;
+        return context.session.data.role?.name === 'admin';
     },
-
+  },
     
   })
 );

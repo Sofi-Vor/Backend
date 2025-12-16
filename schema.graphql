@@ -243,27 +243,12 @@ input PostWhereInput {
   slug: StringFilter
   content: StringFilter
   excerpt: StringFilter
-  status: StringNullableFilter
+  status: StringFilter
   createdAt: DateTimeNullableFilter
   updatedAt: DateTimeNullableFilter
   author: UserWhereInput
   category: CategoryWhereInput
   tags: TagManyRelationFilter
-}
-
-input StringNullableFilter {
-  equals: String
-  in: [String!]
-  notIn: [String!]
-  lt: String
-  lte: String
-  gt: String
-  gte: String
-  contains: String
-  startsWith: String
-  endsWith: String
-  mode: QueryMode
-  not: StringNullableFilter
 }
 
 input DateTimeNullableFilter {
