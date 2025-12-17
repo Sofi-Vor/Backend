@@ -1,13 +1,17 @@
 import { list } from '@keystone-6/core';
+import { allowAll } from '@keystone-6/core/access';
 import { text, relationship, timestamp } from '@keystone-6/core/fields';
+
+const isAdmin = ({ session }: any) => Boolean(session?.data?.isAdmin);
+const isSignedIn = ({ session }: any) => Boolean(session?.data);
 
 export const Comment = list({
   access: {
     operation: {
-      query: () => true,
-      create: ({ session }) => !!session,
-      update: ({ session }) => session?.data.role?.name === 'admin',
-      delete: ({ session }) => session?.data.role?.name === 'admin',
+      query: allowAll,
+      create: isSignedIn,
+      update: isAdmin,
+      delete: isAdmin,
     },
   },
 

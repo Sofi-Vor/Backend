@@ -12,13 +12,14 @@ generator client {
 }
 
 model User {
-  id       String  @id @default(cuid())
-  name     String  @default("")
-  email    String  @unique @default("")
+  id       String    @id @default(cuid())
+  name     String    @default("")
+  email    String    @unique @default("")
   password String
-  posts    Post[]  @relation("Post_author")
-  role     Role?   @relation("User_role", fields: [roleId], references: [id])
-  roleId   String? @map("role")
+  posts    Post[]    @relation("Post_author")
+  role     Role?     @relation("User_role", fields: [roleId], references: [id])
+  roleId   String?   @map("role")
+  comments Comment[] @relation("Comment_author")
 
   @@index([roleId])
 }
@@ -48,6 +49,7 @@ model Post {
   category        Category? @relation("Post_category", fields: [categoryId], references: [id])
   categoryId      String?   @map("category")
   tags            Tag[]     @relation("Post_tags")
+  comments        Comment[] @relation("Comment_post")
 
   @@index([authorId])
   @@index([categoryId])
@@ -64,4 +66,17 @@ model Category {
   name  String @default("")
   slug  String @unique @default("")
   posts Post[] @relation("Post_category")
+}
+
+model Comment {
+  id        String    @id @default(cuid())
+  content   String    @default("")
+  post      Post?     @relation("Comment_post", fields: [postId], references: [id])
+  postId    String?   @map("post")
+  author    User?     @relation("Comment_author", fields: [authorId], references: [id])
+  authorId  String?   @map("author")
+  createdAt DateTime? @default(now())
+
+  @@index([postId])
+  @@index([authorId])
 }
