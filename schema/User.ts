@@ -21,6 +21,7 @@ export const User = list({
         isFilterable: false,
       isOrderable: false,}),
         posts: relationship({ ref: 'Post.author', many: true }),
-        role: relationship({ ref: 'Role.users', many: false, })
+        role: relationship({ ref: 'Role.users', many: false, }),
+        comments: relationship({ref: 'Comment.author',many: true,}),
     },
 });

@@ -48,7 +48,8 @@ export const Post = list({
 
     author: relationship({ ref: 'User.posts' }),
     category: relationship({ ref: 'Category.posts' }),
-    tags: relationship({ ref: 'Tag.posts', many: true })
+    tags: relationship({ ref: 'Tag.posts', many: true }),
+    comments : relationship({ref: 'Comment.post', many: true})
   },
 
   ui: {
@@ -59,7 +60,7 @@ export const Post = list({
   },
 
   hooks: {
-    resolveInput: async ({ resolvedData, operation, item }) => {
+    resolveInput: async ({ resolvedData }) => {
       if (resolvedData.title && (!resolvedData.slug || resolvedData.slug === "")) {
         resolvedData.slug = createSlug(resolvedData.title);
       }

@@ -4,6 +4,7 @@ import { Tag } from './schema/Tag';
 import { Category } from './schema/Category';
 import { Post } from './schema/Post';
 import { Role } from './schema/Role';
+import { Comment } from './schema/Comment';
 import { withAuth, session } from './auth';
 
 export default withAuth(
@@ -19,6 +20,7 @@ export default withAuth(
       Post,
       Tag,
       Category,
+      Comment
     },
 
     server:{
