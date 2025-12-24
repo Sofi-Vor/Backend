@@ -2,15 +2,17 @@ import{ list} from '@keystone-6/core';
 import { allowAll } from "@keystone-6/core/access";
 import{ text, relationship} from '@keystone-6/core/fields'
 
-const isAdmin = ({ session }: any) => Boolean(session?.data?.isAdmin);
+const hasRole = ({ session, roleName }: { session?: any; roleName: string }) => {
+  return session?.data?.role?.name === roleName;
+};
 
 export const Tag = list({
     access: {
       operation: {
-        create: isAdmin,
+        create: ({ session }) => hasRole({ session, roleName: 'Admin' }),
         query: () => true,
-        update: isAdmin,
-        delete: isAdmin,
+        update: ({ session }) => hasRole({ session, roleName: 'Admin' }),
+        delete: ({ session }) => hasRole({ session, roleName: 'Admin' }),
       },
     },
     fields:{

@@ -7,6 +7,9 @@ let sessionMaxAge = 60 * 60 * 24 * 30; // 30 дней
 export const session = statelessSessions({
   secret: sessionSecret,
   maxAge: sessionMaxAge,
+  secure: false, 
+  sameSite: 'lax', 
+  path: '/',
 });
 
 export const { withAuth } = createAuth({

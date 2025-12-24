@@ -23,15 +23,30 @@ export default withAuth(
       Comment
     },
 
-    server:{
-      port: 3001
+    server: {
+      port: 3001,
+      // КРИТИЧНО ВАЖНО: добавляем CORS
+      cors: {
+        origin: ['http://localhost:3000'], // Ваш Next.js на порту 3000
+        credentials: true, // Разрешаем куки
+      },
+      // Дополнительные настройки для кук
+      extendExpressApp: (app) => {
+        // Убедимся, что куки устанавливаются правильно
+        app.use((req, res, next) => {
+          res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+          res.header('Access-Control-Allow-Credentials', 'true');
+          next();
+        });
+      }
     },
+    
      storage: {
       my_images: {
         kind: 'local',
         type: 'image',
         storagePath: 'public/images',
-        generateUrl: path => `/images/${path}`,
+        generateUrl: path => `/images${path}`,
         serverRoute: {
           path: '/images'
         },
@@ -43,8 +58,9 @@ export default withAuth(
     ui: {
       isAccessAllowed: (context) => {
     if (!context.session) return false;
-        return context.session.data.role?.name === 'admin';
-    },
+    if (!context.session.data?.id) return false;
+    return true;
+  },
   },
     
   })

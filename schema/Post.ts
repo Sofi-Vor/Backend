@@ -2,24 +2,18 @@ import { list } from '@keystone-6/core';
 import { text, relationship, select, timestamp, image } from '@keystone-6/core/fields';
 import { createSlug } from './Slug';
 
-
-const isAdmin = ({ session }: any) => Boolean(session?.data?.isAdmin);
-
+const hasAnyRole = ({ session, allowedRoles }: { session?: any; allowedRoles: string[] }) => {
+  return allowedRoles.includes(session?.data?.role?.name);
+};
 
 export const Post = list({
   access:{
     operation:{
-      create: isAdmin,
-      update: isAdmin,
-      delete: isAdmin,
+      create: ({ session }) => hasAnyRole({ session, allowedRoles: ['Admin', 'User'] }),
+      update: ({ session }) => hasAnyRole({ session, allowedRoles: ['Admin', 'User'] }),
+      delete: ({ session }) => hasAnyRole({ session, allowedRoles: ['Admin'] }),
       query: ()=>true
     },
-    filter: {
-        query: ({ session }: any) => {
-          if (session?.data?.isAdmin) return true;
-          return { status: { equals: 'published' } };
-        },
-      }
   },
   fields: {
     title: text({ validation: { isRequired: true } }),
@@ -60,13 +54,21 @@ export const Post = list({
   },
 
   hooks: {
-    resolveInput: async ({ resolvedData }) => {
-      if (resolvedData.title && (!resolvedData.slug || resolvedData.slug === "")) {
-        resolvedData.slug = createSlug(resolvedData.title);
-      }
-      return resolvedData;
+  resolveInput: async ({ resolvedData, context, operation }) => {
+    if (
+      operation === 'create' &&
+      resolvedData.title &&
+      !resolvedData.slug
+    ) {
+      resolvedData.slug = await createSlug(
+        resolvedData.title,
+        context
+      );
     }
-  }
+
+    return resolvedData;
+  },
+}
 
 
 });

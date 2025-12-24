@@ -2,15 +2,16 @@ import {list} from '@keystone-6/core';
 import { allowAll } from '@keystone-6/core/access';
 import {text, password, relationship } from '@keystone-6/core/fields';
 
-const isAdmin = ({ session }: any) => Boolean(session?.data?.isAdmin);
-const isSignedIn = ({ session }: any) => Boolean(session?.data);
+const hasAnyRole = ({ session, allowedRoles }: { session?: any; allowedRoles: string[] }) => {
+  return allowedRoles.includes(session?.data?.role?.name);
+};
 
 export const User = list({
     access:{
     operation:{
       create: allowAll,
-      update: isSignedIn,
-      delete: isAdmin,
+      update: ({ session }) => hasAnyRole({ session, allowedRoles: ['Admin', 'User'] }),
+      delete: ({ session }) => hasAnyRole({ session, allowedRoles: ['Admin'] }),
       query: ()=>true
     },
     },
